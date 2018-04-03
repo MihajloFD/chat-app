@@ -1,0 +1,148 @@
+@import "https://fonts.googleapis.com/css?family=Open+Sans:400,600";
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%; }
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0; }
+
+body {
+  color: #2c3e50;
+  font-size: 13px;
+  font-family: 'Open Sans', sans-serif; }
+
+.app-massenger {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; }
+  .app-massenger .header {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+    .app-massenger .header .left {
+      width: 200px; }
+      .app-massenger .header .left .actions {
+        line-height: 50px;
+        padding: 0 10px; }
+    .app-massenger .header .content {
+      flex-grow: 1; }
+      .app-massenger .header .content h2 {
+        line-height: 50px;
+        text-align: center; }
+    .app-massenger .header .right {
+      width: 300px; }
+      .app-massenger .header .right .user-bar {
+        display: flex;
+        justify-content: flex-end;
+        line-height: 50px;
+        padding: 0 10px; }
+        .app-massenger .header .right .user-bar .profile-name {
+          padding-right: 10px; }
+        .app-massenger .header .right .user-bar .profile-image img {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-top: 10px; }
+  .app-massenger .main {
+    height: 100%;
+    display: flex; }
+    .app-massenger .main .left-sidebar {
+      width: 200px;
+      border-right: 1px solid rgba(0, 0, 0, 0.05); }
+    .app-massenger .main .right-sidebar {
+      width: 300px;
+      border-left: 1px solid rgba(0, 0, 0, 0.05); }
+      .app-massenger .main .right-sidebar .title {
+        padding: 10px; }
+    .app-massenger .main .content {
+      flex-grow: 1;
+      overflow: auto; }
+      .app-massenger .main .content .message-input {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        height: 50px;
+        display: flex;
+        flex-direction: row; }
+        .app-massenger .main .content .message-input .text-input {
+          flex-grow: 1; }
+          .app-massenger .main .content .message-input .text-input textarea {
+            border: 0 none;
+            height: 100%;
+            width: 100%;
+            padding: 8px; }
+        .app-massenger .main .content .message-input .actions .send {
+          background: #00a8ff;
+          color: white;
+          border: 0 none;
+          padding: 7px 15px;
+          line-height: 50px; }
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  padding: 20px; }
+  .messages .message {
+    display: flex;
+    margin: 0 15px; }
+    .messages .message .message-user-image img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%; }
+    .messages .message .message-body {
+      padding-left: 10px; }
+      .messages .message .message-body .message-text {
+        background: #00a8ff;
+        color: white;
+        padding: 10px;
+        border-radius: 10px; }
+    .messages .message.me {
+      justify-content: flex-end; }
+      .messages .message.me .message-text {
+        background: #2c3e50; }
+
+.chanels .chanel {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 0;
+  display: flex; }
+  .chanels .chanel .user-image {
+    width: 30px; }
+    .chanels .chanel .user-image img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%; }
+  .chanels .chanel .chanel-info {
+    flex-grow: 1;
+    padding-left: 8px; }
+    .chanels .chanel .chanel-info h2 {
+      font-size: 14px;
+      font-weight: 600; }
+    .chanels .chanel .chanel-info p {
+      font-size: 12px; }
+
+.members .member {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px; }
+  .members .member .user-image {
+    width: 30px; }
+    .members .member .user-image img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%; }
+  .members .member .member-info {
+    padding-left: 8px;
+    flex-grow: 1; }
+    .members .member .member-info h2 {
+      font-size: 14px; }
+    .members .member .member-info p {
+      font-size: 12px; }
+
+h2.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8); }
+
+/*# sourceMappingURL=app.css.map */
