@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
+import {OrderedMap} from 'immutable';
+// import _ from 'lodash';
 let avatar = 'https://www.drupal.org/files/issues/default-avatar.png';
-
 export default class Message extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      height: window.innerHeight,
-      messages: []
+      height: window.innerHeight
     };
     this.addTestMessage = this.addTestMessage.bind(this);
     this._onResize = this._onResize.bind(this);
   }
   _onResize () {
     this.setState({height: window.innerHeight});
-    console.log('resizing is in prosecc');
   }
   componentDidMount () {
     window.addEventListener('resize', this._onResize);
@@ -23,28 +22,47 @@ export default class Message extends Component {
     window.removeEventListener('resize', this._onResize);
   }
   addTestMessage () {
-    let {messages} = this.state;
-
+    const {store} = this.props;
     for (let i = 0; i < 100; i++) {
       let isMe = false;
       if (i % 3 === 0) {
         isMe = true;
       };
       const newMsg = {
+        _id: i,
         author: `Author: ${i}`,
         body: `The body of message ${i}`,
         avatar: avatar,
         me: isMe
       };
-      messages.push(newMsg);
+      // console.log(typeof i);
+      store.addMessages(i, newMsg);
     }
-    this.setState({messages: messages});
+    for (let j = 0; j < 10; j++) {
+      const newChannel = {
+        _id: j,
+        title: `Channel title${j}`,
+        lastMassage: `last ${j}`,
+        members: new OrderedMap({
+          1: true,
+          3: true
+        }),
+        messages: new OrderedMap()
+      };
+      newChannel.messages = newChannel.messages.set(j, true);
+      store.addChaneles(j, newChannel);
+    }
   }
   render () {
-    const {height, messages} = this.state;
+    const {height} = this.state;
     const style = {
       height: height
     };
+    const {store} = this.props;
+    const activeChannel = store.getActiveChannel();
+    const messages = store.getMessagesFromChannel(activeChannel);
+    const channels = store.getChaneles();
+    const members = store.getMembersFromChanel(activeChannel);
     return (
       <div style={style} className='app-massenger'>
         <div className='header'>
@@ -67,15 +85,21 @@ export default class Message extends Component {
         <div className='main' >
           <div className='left-sidebar'>
             <div className='chanels'>
-              <div className='chanel'>
-                <div className='user-image'>
-                  <img src={avatar} alt='' />
-                </div>
-                <div className='chanel-info'>
-                  <h2>kikiriki</h2>
-                  <p>hellooo there</p>
-                </div>
-              </div>
+              {channels.map((channel, index) => {
+                return (
+                  <div key={index} onClick={() => {
+                    store.setActiveChannel(channel._id);
+                  }} className='chanel'>
+                    <div className='user-image'>
+                      <img src={avatar} alt='' />
+                    </div>
+                    <div className='chanel-info'>
+                      <h2>{channel.title}</h2>
+                      <p>{channel.lastMassage}</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className='content'>
@@ -110,15 +134,19 @@ export default class Message extends Component {
           <div className='right-sidebar' >
             <h2 className='title'>Members</h2>
             <div className='members' >
-              <div className='member'>
-                <div className='user-image'>
-                  <img src={avatar} alt='' />
-                </div>
-                <div className='member-info'>
-                  <h2>kikiriki</h2>
-                  <p>hellooo there</p>
-                </div>
-              </div>
+              {members.map((member, key) => {
+                return (
+                  <div key={key} className='member'>
+                    <div className='user-image'>
+                      <img src={avatar} alt='' />
+                    </div>
+                    <div className='member-info'>
+                      <h2>{member.name}</h2>
+                      <p>hellooo there</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

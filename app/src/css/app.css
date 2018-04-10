@@ -49,7 +49,8 @@ body {
           margin-top: 10px; }
   .app-massenger .main {
     height: 100%;
-    display: flex; }
+    display: flex;
+    overflow: hidden; }
     .app-massenger .main .left-sidebar {
       width: 200px;
       border-right: 1px solid rgba(0, 0, 0, 0.05); }
@@ -60,7 +61,11 @@ body {
         padding: 10px; }
     .app-massenger .main .content {
       flex-grow: 1;
-      overflow: auto; }
+      overflow: hidden;
+      display: flex;
+      flex-direction: column; }
+      .app-massenger .main .content .messages {
+        flex-grow: 1; }
       .app-massenger .main .content .message-input {
         border-top: 1px solid rgba(0, 0, 0, 0.05);
         height: 50px;
@@ -72,21 +77,25 @@ body {
             border: 0 none;
             height: 100%;
             width: 100%;
-            padding: 8px; }
-        .app-massenger .main .content .message-input .actions .send {
+            padding: 8px 15px; }
+        .app-massenger .main .content .message-input .actions button.send {
           background: #00a8ff;
           color: white;
           border: 0 none;
           padding: 7px 15px;
-          line-height: 50px; }
+          line-height: 40px; }
 
 .messages {
   display: flex;
   flex-direction: column;
-  padding: 20px; }
+  overflow-y: auto;
+  height: 100%; }
   .messages .message {
     display: flex;
-    margin: 0 15px; }
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 15px;
+    margin-bottom: 40px; }
     .messages .message .message-user-image img {
       width: 20px;
       height: 20px;
@@ -100,8 +109,9 @@ body {
         border-radius: 10px; }
     .messages .message.me {
       justify-content: flex-end; }
-      .messages .message.me .message-text {
-        background: #2c3e50; }
+      .messages .message.me .message-body .message-text {
+        background: #2c3e50;
+        color: #fff; }
 
 .chanels .chanel {
   border: 1px solid rgba(0, 0, 0, 0.05);

@@ -63,6 +63,7 @@ body{
   .main{
     height: 100%;
     display: flex;
+    overflow: hidden;
     .left-sidebar{
       width: $left-sidebar-width;
       border-right: 1px solid $border-color;      
@@ -76,7 +77,12 @@ body{
     }
     .content{
       flex-grow: 1;
-      overflow: auto;  
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .messages{
+        flex-grow: 1;
+      }  
       .message-input{
         border-top: 1px solid $border-color;
         height: 50px;
@@ -88,16 +94,16 @@ body{
             border: 0 none;
             height: 100%;
             width: 100%;
-            padding: 8px;
+            padding: 8px 15px;
           }
         }
         .actions{
-          .send{
+          button.send{
             background:  $primary-color;
             color:white;
             border: 0 none;
             padding: 7px 15px;
-            line-height: 50px;
+            line-height: 40px;
           }
         }
       }   
@@ -107,10 +113,14 @@ body{
 .messages{
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
   .message{
     display: flex;
-    margin: 0 15px;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 15px;
+    margin-bottom: 40px;
     .message-user-image{
       img{
         width: 20px;
@@ -132,9 +142,12 @@ body{
     }
     &.me{
       justify-content: flex-end;
-      .message-text{
-        background: $body-color;
-     }
+      .message-body{
+        .message-text{
+          background: $body-color;
+          color: #fff;
+        }
+      }
     }
   }
 }
