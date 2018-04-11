@@ -1,18 +1,46 @@
 import React, {Component} from 'react';
 import {OrderedMap} from 'immutable';
-// import _ from 'lodash';
+import {ObjectID} from '../helper/objectid';
+import _ from 'lodash';
 let avatar = 'https://www.drupal.org/files/issues/default-avatar.png';
 export default class Message extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      height: window.innerHeight
+      height: window.innerHeight,
+      newMessage: 'Hello there...'
     };
     this.addTestMessage = this.addTestMessage.bind(this);
     this._onResize = this._onResize.bind(this);
+    this.handleSend = this.handleSend.bind(this);
+    this.renderMessage = this.renderMessage.bind(this);
+  }
+  renderMessage (message) {
+    return <p dangerouslySetInnerHTML={{__html: _.get(message, 'body')}} />;
   }
   _onResize () {
     this.setState({height: window.innerHeight});
+  }
+  handleSend () {
+    const {newMessage} = this.state;
+    const {store} = this.props;
+
+    const messageID = new ObjectID().toString();
+    const channel = store.getActiveChannel();
+    const channelId = _.get(channel, '_id', null);
+    const currentUser = store.getCurrentUser();
+
+    const message = {
+      _id: messageID,
+      channelId: channelId,
+      body: newMessage,
+      author: _.get(currentUser, 'name', null),
+      avatar: avatar,
+      me: true
+    };
+    console.log('new message object ', message);
+    store.addMessages(messageID, message);
+    this.setState({newMessage: ''});
   }
   componentDidMount () {
     window.addEventListener('resize', this._onResize);
@@ -29,7 +57,7 @@ export default class Message extends Component {
         isMe = true;
       };
       const newMsg = {
-        _id: i,
+        _id: `${i}`,
         author: `Author: ${i}`,
         body: `The body of message ${i}`,
         avatar: avatar,
@@ -40,16 +68,17 @@ export default class Message extends Component {
     }
     for (let j = 0; j < 10; j++) {
       const newChannel = {
-        _id: j,
+        _id: `${j}`,
         title: `Channel title${j}`,
         lastMassage: `last ${j}`,
         members: new OrderedMap({
-          1: true,
-          3: true
+          '1': true,
+          '3': true
         }),
         messages: new OrderedMap()
       };
-      newChannel.messages = newChannel.messages.set(j, true);
+      const msgId = `${j}`;
+      newChannel.messages = newChannel.messages.set(msgId, true);
       store.addChaneles(j, newChannel);
     }
   }
@@ -73,7 +102,7 @@ export default class Message extends Component {
             </div>
           </div>
           <div className='content'>
-            <h2>Title</h2>
+            <h2>{_.get(activeChannel, 'title', '')}</h2>
           </div>
           <div className='right'>
             <div className='user-bar'>
@@ -87,9 +116,11 @@ export default class Message extends Component {
             <div className='chanels'>
               {channels.map((channel, index) => {
                 return (
-                  <div key={index} onClick={() => {
-                    store.setActiveChannel(channel._id);
-                  }} className='chanel'>
+                  <div key={index}
+                    onClick={() => {
+                      store.setActiveChannel(channel._id);
+                    }}
+                    className={_.get(activeChannel, '_id') === _.get(channel, '_id') ? 'active chanel' : 'chanel'}>
                     <div className='user-image'>
                       <img src={avatar} alt='' />
                     </div>
@@ -113,7 +144,7 @@ export default class Message extends Component {
                     <div className='message-body'>
                       <div className='message-author'>{message.me ? 'ja kazem' : message.author}</div>
                       <div className='message-text'>
-                        <p>{message.body}</p>
+                        {this.renderMessage(message)}
                       </div>
                     </div>
                   </div>
@@ -122,10 +153,18 @@ export default class Message extends Component {
             </div>
             <div className='message-input'>
               <div className='text-input'>
-                <textarea placeholder='Write your message' />
+                <textarea
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      this.handleSend();
+                    }
+                  }}
+                  onChange={(e) => this.setState({newMessage: e.target.value})}
+                  value={this.state.newMessage}
+                  placeholder='Write new message' />
               </div>
               <div className='actions'>
-                <button className='send'>
+                <button onClick={this.handleSend} className='send'>
                   Send
                 </button>
               </div>

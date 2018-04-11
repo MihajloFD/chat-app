@@ -114,6 +114,7 @@ body {
         color: #fff; }
 
 .chanels .chanel {
+  cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0.05);
   padding: 8px 0;
   display: flex; }
@@ -131,6 +132,8 @@ body {
       font-weight: 600; }
     .chanels .chanel .chanel-info p {
       font-size: 12px; }
+  .chanels .chanel.active {
+    background: rgba(0, 0, 0, 0.05); }
 
 .members .member {
   display: flex;

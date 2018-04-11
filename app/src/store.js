@@ -1,9 +1,10 @@
 import {OrderedMap} from 'immutable';
+import _ from 'lodash';
 
 const users = OrderedMap({
-  1: {_id: 1, name: 'Miki', created: new Date()},
-  2: {_id: 2, name: 'Gogo', created: new Date()},
-  3: {_id: 3, name: 'Denis', created: new Date()}
+  '1': {_id: '1', name: 'Miki', created: new Date()},
+  '2': {_id: '2', name: 'Gogo', created: new Date()},
+  '3': {_id: '3', name: 'Denis', created: new Date()}
 });
 
 export default class Store {
@@ -13,10 +14,13 @@ export default class Store {
     this.channels = new OrderedMap();
     this.activeChannalId = null;
     this.user = {
-      _id: 0,
-      name: 'Toan',
+      _id: '1',
+      name: 'Miki',
       created: new Date()
     };
+  }
+  getCurrentUser () {
+    return this.user;
   }
   setActiveChannel (activeChannalId) {
     this.activeChannalId = activeChannalId;
@@ -30,7 +34,7 @@ export default class Store {
     let messages = [];
     if (channel) {
       channel.messages.map((value, key) => {
-        key = Number(key);
+        // key = Number(key);
         const message = this.messages.get(key);
         messages.push(message);
       });
@@ -50,15 +54,23 @@ export default class Store {
   getMessages () {
     return this.messages.valueSeq();
   }
-  addMessages (index, message = {}) {
-    this.messages = this.messages.set(index, message);
+  addMessages (id, message = {}) {
+    this.messages = this.messages.set(`${id}`, message);
+
+    const channelId = _.get(message, 'channelId');
+    if (channelId) {
+      const channel = this.channels.get(channelId);
+      channel.messages = channel.messages.set(id, true);
+      this.channels = this.channels.set(channelId, channel);
+    }
+
     this.update();
   }
   getChaneles () {
     return this.channels.valueSeq();
   }
   addChaneles (index, channel = {}) {
-    this.channels = this.channels.set(index, channel);
+    this.channels = this.channels.set(`${index}`, channel);
     this.update();
   }
   update () {
