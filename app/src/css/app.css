@@ -225,6 +225,16 @@ h2.title {
   display: flex;
   flex-direction: row;
   position: relative; }
+  .toolbar span {
+    line-height: 20px;
+    height: 30px;
+    background: #00a8ff;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    border-radius: 3px;
+    margin: 10px 5px 0 0;
+    padding: 5px 8px; }
   .toolbar .search-user {
     position: absolute;
     left: 0;
@@ -262,5 +272,92 @@ h2.title {
     line-height: 30px;
     margin-top: 10px;
     border: 0 none; }
+
+.user-bar {
+  position: relative; }
+  .user-bar .sign-in-button {
+    background: #00a8ff;
+    border: 0 none;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 3px;
+    height: 30px;
+    padding: 8px;
+    margin-top: 10px;
+    font-weight: 600;
+    cursor: pointer; }
+  .user-bar .user-form {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    border-top: 0; }
+    .user-bar .user-form .form-item label {
+      line-height: 30px;
+      min-width: 100px;
+      text-align: right;
+      margin-right: 8px; }
+    .user-bar .user-form .form-item input[type='email'], .user-bar .user-form .form-item input[type='password'], .user-bar .user-form .form-item input[type='text'] {
+      height: 30px;
+      line-height: 30px; }
+    .user-bar .user-form .form-actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end; }
+  .user-bar .form-item {
+    display: flex;
+    margin-bottom: 10px; }
+    .user-bar .form-item label {
+      font-weight: 600; }
+    .user-bar .form-item input[type='email'], .user-bar .form-item input[type='password'], .user-bar .form-item input[type='text'] {
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 3px 8px; }
+  .user-bar .form-actions button {
+    border: 0 none;
+    padding: 7px 15px;
+    text-align: center; }
+    .user-bar .form-actions button.primary {
+      background: #00a8ff;
+      color: #fff; }
+  .user-bar .user-menu {
+    min-width: 200px;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-top: 0 none; }
+    .user-bar .user-menu ul {
+      padding: 0;
+      margin: 0;
+      list-style: none; }
+      .user-bar .user-menu ul li {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding: 5px 8px; }
+        .user-bar .user-menu ul li button {
+          background: none;
+          border: 0 none;
+          display: block;
+          cursor: pointer;
+          width: 100%; }
+        .user-bar .user-menu ul li:hover {
+          background: rgba(0, 0, 0, 0.08); }
+    .user-bar .user-menu h2 {
+      font-size: 14px;
+      font-weight: 600;
+      display: block;
+      text-align: center;
+      margin: 0; }
+
+.app-message {
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid #00a8ff;
+  border-radius: 5px;
+  margin: 10px 0; }
+  .app-message.error {
+    background: #e84118;
+    color: #fff;
+    border-color: #e84118; }
 
 /*# sourceMappingURL=app.css.map */

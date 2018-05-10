@@ -4,6 +4,7 @@ import {ObjectID} from '../helper/objectid';
 import _ from 'lodash';
 import moment from 'moment';
 import SearchUser from './searchUser';
+import UserBar from './userBar';
 let avatar = 'https://www.drupal.org/files/issues/default-avatar.png';
 export default class Message extends Component {
   constructor (props) {
@@ -21,7 +22,10 @@ export default class Message extends Component {
     this._onCreateChannel = this._onCreateChannel.bind(this);
     this.renderChannelTitle = this.renderChannelTitle.bind(this);
   }
-  renderChannelTitle (channel) {
+  renderChannelTitle (channel = null) {
+    if (!channel) {
+      return null;
+    }
     const {store} = this.props;
     const members = store.getMembersFromChanel(channel);
     const names = [];
@@ -29,11 +33,16 @@ export default class Message extends Component {
       const name = _.get(user, 'name');
       names.push(name);
     });
-    console.log('imena ', names);
-    return <h2>{_.join(names, ',')}</h2>;
+    let title = _.join(names, ',');
+    if (!title && _.get(channel, 'isNew')) {
+      title = 'New message';
+    }
+    return <h2>{title}</h2>;
   }
   _onCreateChannel () {
     const {store} = this.props;
+    const currentUser = store.getCurrentUser();
+    const currentUserId = _.get(currentUser, '_id');
     const channelId = new ObjectID().toString();
     const channel = {
       _id: channelId,
@@ -42,8 +51,10 @@ export default class Message extends Component {
       members: new OrderedMap(),
       messages: new OrderedMap(),
       created: new Date(),
+      userId: currentUserId,
       isNew: true
     };
+    channel.members = channel.members.set(currentUserId, true);
     store.onCreateNewChannel(channel);
   }
   scrollToBottomMessage () {
@@ -71,13 +82,13 @@ export default class Message extends Component {
     const channel = store.getActiveChannel();
     const channelId = _.get(channel, '_id', null);
     const currentUser = store.getCurrentUser();
+    const currentUserId = _.get(currentUser, '_id');
 
     const message = {
       _id: messageID,
       channelId: channelId,
       body: newMessage,
-      author: _.get(currentUser, 'name', null),
-      avatar: avatar,
+      userId: currentUserId,
       me: true
     };
     console.log('new message object ', message);
@@ -118,6 +129,12 @@ export default class Message extends Component {
           <div className='content'>
             {_.get(activeChannel, 'isNew') ? <div className='toolbar'>
               <label>To:</label>
+              {members.map((user, key) => {
+                return <span key={key} onClick={() => {
+                  store.removeMemberFromChannel(activeChannel, user);
+                  // console.log('remove user', user);
+                }}>{_.get(user, 'name')}</span>;
+              })}
               <input
                 placeholder='Type name of person...'
                 value={searchUser}
@@ -142,13 +159,10 @@ export default class Message extends Component {
                   });
                 }}
                 search={searchUser} store={store} /> : null}
-            </div> : <h2>{_.get(activeChannel, 'title', '')}</h2>}
+            </div> : <h2>{this.renderChannelTitle(activeChannel)}</h2>}
           </div>
           <div className='right'>
-            <div className='user-bar'>
-              <div className='profile-name'>miki</div>
-              <div className='profile-image'> <img src={avatar} alt='' /></div>
-            </div>
+            <UserBar store={store} />
           </div>
         </div>
         <div className='main' >
@@ -176,10 +190,11 @@ export default class Message extends Component {
           <div className='content'>
             <div ref={(ref) => (this.messagesRef = ref)} className='messages'>
               {messages.map((message, index) => {
+                const user = _.get(message, 'user');
                 return (
                   <div key={index} className={message.me ? 'message me' : 'message'} >
                     <div className='message-user-image'>
-                      <img src={message.avatar} alt='' />
+                      <img src={_.get(user, 'avatar')} alt='' />
                     </div>
                     <div className='message-body'>
                       <div className='message-author'>{message.me ? 'ja kazem' : message.author}</div>
@@ -191,7 +206,7 @@ export default class Message extends Component {
                 );
               })}
             </div>
-            <div className='message-input'>
+            {activeChannel && members.size ? <div className='message-input'>
               <div className='text-input'>
                 <textarea
                   onKeyUp={(e) => {
@@ -205,10 +220,10 @@ export default class Message extends Component {
               </div>
               <div className='actions'>
                 <button onClick={this.handleSend} className='send'>
-                  Send
+                    Send
                 </button>
               </div>
-            </div>
+            </div> : null}
           </div>
           <div className='right-sidebar' >
             {members.size > 0
